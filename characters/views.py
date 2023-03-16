@@ -18,3 +18,11 @@ def get_random_character(request: Request) -> Response:
 
 
 class CharacterListView(generics.ListAPIView):
+    serializer_class = CharacterSerializer
+
+    def get_queryset(self):
+        queryset = Character.objects.all()
+        name = self.request.query_params["name"]
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
